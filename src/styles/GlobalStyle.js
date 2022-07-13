@@ -37,6 +37,8 @@ export default createGlobalStyle`
   }
   button {
     border : none;
+    background: none;
+    color: inherit;
     cursor : pointer;
   }
   li {
@@ -52,5 +54,13 @@ export default createGlobalStyle`
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+  ::-moz-selection {
+    background: #3cb371;
+    color: #fff;
+  }
+  ::selection {
+    background: #3cb371;
+    color: #fff;
   }
 `;
