@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { GiFlowerPot } from 'react-icons/gi';
 
 const Header = () => {
   const navigate = useNavigate();
+  const [scrollPos, setScrollPos] = useState(0);
+  const updateScroll = () => {
+    setScrollPos(window.scrollY || document.documentElement.scrollTop);
+  };
+  useEffect(() => {
+    window.addEventListener('scroll', updateScroll);
+  }, []);
 
   return (
-    <HeaderComponent>
+    <HeaderComponent scroll={scrollPos}>
       <Wrapper>
         <Link to="/">
           <Flower />
@@ -31,6 +38,9 @@ const HeaderComponent = styled.header`
   color: #111;
   text-align: center;
   word-break: keep-all;
+  background: ${(props) =>
+    props.scroll < 80 ? 'transparent' : 'rgba(255, 255, 255, 0.9)'};
+  transition: background 0.5s ease-in-out;
   button {
     padding: 10px 15px;
     margin: 0 15px 0 -10px;
