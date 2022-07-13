@@ -41,6 +41,8 @@ const HeaderComponent = styled.header`
   background: ${(props) =>
     props.scroll < 80 ? 'transparent' : 'rgba(255, 255, 255, 0.9)'};
   transition: background 0.5s ease-in-out;
+  z-index: 100;
+  
   button {
     padding: 10px 15px;
     margin: 0 15px 0 -10px;
