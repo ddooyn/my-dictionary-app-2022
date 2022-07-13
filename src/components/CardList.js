@@ -1,42 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadWordsFB } from '../redux/modules/words';
 
 import Card from './Card';
 
 const CardList = () => {
-  const words = {
-    list: [
-      {
-        word: 'grin',
-        pronunciation: 'grin',
-        meaning: '웃다, 미소',
-        example: 'grin with delight',
-        translation: '기뻐서 방긋 웃다',
-        checked: true,
-      },
-      {
-        word: 'bloom',
-        pronunciation: 'bluːm',
-        meaning: '1.꽃 2.꽃을 피우다 3.혈색이 돌다',
-        example: 'Most roses will begin to bloom from late May.',
-        translation: '5월 말부터 대부분의 장미가 꽃을 피우기 시작한다.',
-        checked: false,
-      },
-      {
-        word: 'adorable',
-        pronunciation: 'əˈdɔːrəbl',
-        meaning: '사랑스러운',
-        example: "You're adorable when you smile.",
-        translation: '너는 웃을 때가 귀엽다',
-        checked: false,
-      },
-    ],
-  };
+  const dispatch = useDispatch();
+  const words = useSelector((state) => state.words.list);
+  useEffect(() => {
+    dispatch(loadWordsFB());
+  }, []);
   return (
     <>
-      <ListTitle>{`📚 ${words.list.length}개의 단어가 있습니다.`}</ListTitle>
+      <ListTitle>{`📚 ${words.length}개의 단어가 있습니다.`}</ListTitle>
       <Cards>
-        {words.list
+        {words
           .slice()
           .reverse()
           .map((v, i) => (
@@ -50,7 +29,7 @@ const CardList = () => {
               check={v.checked}
             />
           ))}
-        {words.list.length % 2 ? <Empty /> : null}
+        {words.length % 2 ? <Empty /> : null}
       </Cards>
     </>
   );
