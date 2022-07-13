@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+
 import { GiFlowerPot } from 'react-icons/gi';
+import { BsPlusLg } from 'react-icons/bs';
+import Button from './Button';
 
 const Header = () => {
-  const navigate = useNavigate();
   const [scrollPos, setScrollPos] = useState(0);
   const updateScroll = () => {
     setScrollPos(window.scrollY || document.documentElement.scrollTop);
@@ -20,7 +22,7 @@ const Header = () => {
           <Flower />
         </Link>
         <Title>다채로운 사전</Title>
-        <button onClick={() => navigate('/word/add')}>단어 추가</button>
+        <Button content={<BsPlusLg />} url="/word/add" />
       </Wrapper>
     </HeaderComponent>
   );
@@ -33,7 +35,7 @@ const HeaderComponent = styled.header`
   top: 0;
   left: 0;
   right: 0;
-  padding: 15px 0;
+  padding: 15px 50px;
   border-bottom: 1px solid #9da3ba;
   color: #111;
   text-align: center;
@@ -42,15 +44,9 @@ const HeaderComponent = styled.header`
     props.scroll < 80 ? 'transparent' : 'rgba(255, 255, 255, 0.9)'};
   transition: background 0.5s ease-in-out;
   z-index: 100;
-  
+
   button {
-    padding: 10px 15px;
-    margin: 0 15px 0 -10px;
-    border-radius: 20px;
-    background-color: #111;
-    color: #fff;
-    font-size: 15px;
-    font-weight: 700;
+    padding: 12px 12px 8px;
   }
 `;
 
@@ -69,6 +65,5 @@ const Title = styled.h1`
 `;
 
 const Flower = styled(GiFlowerPot)`
-  margin-left: 30px;
   font-size: 2.2em;
 `;
