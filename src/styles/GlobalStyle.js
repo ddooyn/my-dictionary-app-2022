@@ -1,6 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
+  @font-face {
+    font-family: 'Bazzi';
+    src: url(/assets/font/Bazzi.woff) format('woff');
+    font-weight: normal;
+    font-style: normal;
+  }
+
  * {
     padding: 0;
     margin: 0;
@@ -13,8 +20,18 @@ export default createGlobalStyle`
   }
   html, body, #root {
     width: 100%;
-    height: 100%;
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(/img/gradienta-unsplash.jpg) 0%/cover no-repeat;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+    display: none;
+    }
+  }
+  body {
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(assets/img/gradienta-unsplash.jpg);
+    background-size: cover;
+  }
+  h1 {
+    font-family: 'Bazzi' !important;
   }
   a {
     text-decoration : none;
