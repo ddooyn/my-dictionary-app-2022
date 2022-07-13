@@ -1,9 +1,11 @@
 import { createGlobalStyle } from 'styled-components';
+import bgImg from '../assets/img/gradienta-unsplash.jpg';
+import BazziFont from '../assets/font/Bazzi.woff';
 
 export default createGlobalStyle`
   @font-face {
     font-family: 'Bazzi';
-    src: url(/assets/font/Bazzi.woff) format('woff');
+    src: url(${BazziFont}) format('woff');
     font-weight: normal;
     font-style: normal;
   }
@@ -20,15 +22,15 @@ export default createGlobalStyle`
   }
   html, body, #root {
     width: 100%;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-    display: none;
-    }
   }
   body {
     height: 100%;
-    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(assets/img/gradienta-unsplash.jpg);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    background: linear-gradient(0deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.5)) 100%, url(${bgImg});
     background-size: cover;
   }
   a {
@@ -55,11 +57,11 @@ export default createGlobalStyle`
     white-space: nowrap;
     border: 0;
   }
-  ::-moz-selection {
+  &::-moz-selection {
     background: #3cb371;
     color: #fff;
   }
-  ::selection {
+  &::selection {
     background: #3cb371;
     color: #fff;
   }
