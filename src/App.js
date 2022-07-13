@@ -1,5 +1,12 @@
+import GlobalStyle from './styles/GlobalStyle';
+
 function App() {
-  return <p>시작</p>;
+  return (
+    <>
+      <GlobalStyle />
+      <p>시작</p>
+    </>
+  );
 }
 
 export default App;
