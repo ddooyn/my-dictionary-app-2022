@@ -27,11 +27,9 @@ export default createGlobalStyle`
     }
   }
   body {
+    height: 100%;
     background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url(assets/img/gradienta-unsplash.jpg);
     background-size: cover;
-  }
-  h1 {
-    font-family: 'Bazzi' !important;
   }
   a {
     text-decoration : none;
@@ -43,5 +41,16 @@ export default createGlobalStyle`
   }
   li {
     list-style: none;
+  }
+  [hidden] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 `;
