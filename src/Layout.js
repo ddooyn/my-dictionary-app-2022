@@ -1,15 +1,21 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
+import styled from 'styled-components';
+
+import Header from './components/Header';
 
 const Layout = () => {
   return (
-    <main>
-      <header>나만의 다채로운 사전</header>
-      <section>
-        <Outlet />
-      </section>
-    </main>
+    <Main>
+      <Header />
+      <Outlet />
+    </Main>
   );
 };
 
 export default Layout;
+
+const Main = styled.main`
+  margin-top: 150px;
+  padding: 0 50px 80px;
+`;
