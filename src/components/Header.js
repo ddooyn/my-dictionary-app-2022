@@ -61,6 +61,7 @@ const Wrapper = styled.div`
 `;
 
 const Title = styled.h1`
+  font-family: 'Bazzi' !important;
   margin-right: -10px;
   font-size: 1.8em;
 `;

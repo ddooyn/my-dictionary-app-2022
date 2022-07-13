@@ -8,7 +8,9 @@ const Layout = () => {
   return (
     <Main>
       <Header />
-      <Outlet />
+      <Section>
+        <Outlet />
+      </Section>
     </Main>
   );
 };
@@ -16,6 +18,10 @@ const Layout = () => {
 export default Layout;
 
 const Main = styled.main`
-  margin-top: 150px;
-  padding: 0 50px 80px;
+  padding: 150px 50px 80px;
+`;
+
+const Section = styled.section`
+  margin: auto;
+  max-width: 1280px;
 `;
