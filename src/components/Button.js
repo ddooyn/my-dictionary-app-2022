@@ -2,11 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
-const Button = ({ content, url }) => {
+const Button = ({ content, url, event }) => {
   const navigate = useNavigate();
   return (
     <>
-      <Btn onClick={() => navigate(url)}>{content}</Btn>
+      {url ? (
+        <Btn onClick={() => navigate(url)}>{content}</Btn>
+      ) : (
+        <Btn onClick={event}>{content}</Btn>
+      )}
     </>
   );
 };

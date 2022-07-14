@@ -3,15 +3,26 @@ import styled from 'styled-components';
 import { BsCheckCircle, BsCheckCircleFill } from 'react-icons/bs';
 import { FaRegEdit } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
+import { removeWordFB } from '../redux/modules/words';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const Card = ({ word, pron, mean, ex, trans, check }) => {
+const Card = ({ word, pron, mean, ex, trans, check, id }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const removeWord = (id) => {
+    dispatch(removeWordFB(id));
+    alert('단어가 삭제되었습니다.');
+    navigate('/');
+  };
+
   return (
     <CardComponent check={check}>
       <strong>{word}</strong>
       <span>{pron}</span>
       <em>{mean}</em>
       <p>{ex}</p>
-      <p>{trans}</p>
+      <p className="trans">{trans}</p>
       <Icons>
         <li>
           <button>{check ? <BsCheckCircleFill /> : <BsCheckCircle />}</button>
@@ -22,7 +33,7 @@ const Card = ({ word, pron, mean, ex, trans, check }) => {
           </button>
         </li>
         <li>
-          <button>
+          <button onClick={() => removeWord(id)}>
             <IoClose />
           </button>
         </li>
@@ -81,10 +92,11 @@ const CardComponent = styled.li`
   p {
     color: ${({ check }) => (check ? '#a4c8f6' : '#0754ae')};
     font-size: 15px;
-    &:last-child {
-      color: ${({ check }) => (check ? '#cddbe2' : '#6d7a89')};
-      letter-spacing: -1px;
-    }
+  }
+
+  .trans {
+    color: ${({ check }) => (check ? '#cddbe2' : '#6d7a89')};
+    letter-spacing: -1px;
   }
 
   & ul li button {

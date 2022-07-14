@@ -11,25 +11,35 @@ const CardList = () => {
   useEffect(() => {
     dispatch(loadWordsFB());
   }, []);
+
   return (
     <>
       <ListTitle>{`📚 ${words.length}개의 단어가 있습니다.`}</ListTitle>
       <Cards>
-        {words
-          .slice()
-          .reverse()
-          .map((v, i) => (
-            <Card
-              key={i}
-              word={v.word}
-              pron={v.pronunciation}
-              mean={v.meaning}
-              ex={v.example}
-              trans={v.translation}
-              check={v.checked}
-            />
-          ))}
-        {words.length % 2 ? <Empty /> : null}
+        {words.map((v) => (
+          <Card
+            key={v.id}
+            id={v.id}
+            word={v.word}
+            pron={v.pronunciation}
+            mean={v.meaning}
+            ex={v.example}
+            trans={v.translation}
+            check={v.checked}
+          />
+        ))}
+        {words.length % 3 ? (
+          words.length % 2 ? (
+            <Empty />
+          ) : (
+            <>
+              <Empty />
+              <Empty />
+            </>
+          )
+        ) : (
+          <Empty />
+        )}
       </Cards>
     </>
   );
