@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Layout from './Layout';
 import Home from './pages/Home';
-import Add from './pages/Add';
+import Word from './pages/Word';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -14,7 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/word/add" element={<Add />} />
+            <Route path="/word/add" element={<Word />} />
+            <Route path="/word/edit/:id" element={<Word />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
