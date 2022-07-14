@@ -35,8 +35,8 @@ const Word = () => {
       meaning: meanRef.current.value,
       example: exRef.current.value,
       translation: transRef.current.value,
-      checked: false,
-      date: Date.now(),
+      checked: wordIdx ? wordInfo.checked : false,
+      date: wordIdx ? wordInfo.date : Date.now(),
     };
     if (
       !(
@@ -103,8 +103,6 @@ const Word = () => {
 export default Word;
 
 const Form = styled.div`
-  width: 350px;
-  height: 480px;
   margin: auto;
   padding: 50px 40px 30px;
   border-radius: 30px;
@@ -120,9 +118,10 @@ const InputWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 25px;
   margin-bottom: 17px;
   label {
-    margin-right: 25px;
     font-size: 16px;
     font-weight: 600;
   }

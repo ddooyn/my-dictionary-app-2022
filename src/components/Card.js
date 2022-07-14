@@ -72,6 +72,7 @@ const CardComponent = styled.li`
   strong {
     color: ${({ check }) => (check ? '#fff' : '#111')};
     font-size: 22px;
+    word-break: break-all;
   }
 
   span {
@@ -79,6 +80,7 @@ const CardComponent = styled.li`
     color: ${({ check }) => (check ? '#ddd' : '#333')};
     font-size: 14px;
     font-weight: 300;
+    word-break: keep-all;
     &::before {
       content: '[';
     }
