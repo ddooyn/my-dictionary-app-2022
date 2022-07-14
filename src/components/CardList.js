@@ -1,20 +1,46 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadWordsFB } from '../redux/modules/words';
+import { loadWordsFB, loadNextWordsFB } from '../redux/modules/words';
 
 import Card from './Card';
 
 const CardList = () => {
   const dispatch = useDispatch();
-  const words = useSelector((state) => state.words.list);
+  const {
+    list: words,
+    length: total,
+    last,
+  } = useSelector((state) => state.words);
+
   useEffect(() => {
     dispatch(loadWordsFB());
   }, []);
 
+  const [fetching, setFetching] = useState(false);
+  const handleScroll = () => {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const clientHeight = document.documentElement.clientHeight;
+    if (scrollTop + clientHeight >= scrollHeight && fetching === false) {
+      if (words.length !== total) {
+        setFetching(true);
+        dispatch(loadNextWordsFB(last));
+        setFetching(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  });
+
   return (
     <>
-      <ListTitle>{`📚 ${words.length}개의 단어가 있습니다.`}</ListTitle>
+      <ListTitle>{`📚 ${total ?? 0}개의 단어가 있습니다.`}</ListTitle>
       <Cards>
         {words.map((v, i) => (
           <Card
@@ -29,15 +55,11 @@ const CardList = () => {
             check={v.checked}
           />
         ))}
-        {words.length % 3 ? (
-          words.length % 2 ? (
+        {words.length % 3 === 1 ? (
+          <>
             <Empty />
-          ) : (
-            <>
-              <Empty />
-              <Empty />
-            </>
-          )
+            <Empty />
+          </>
         ) : (
           <Empty />
         )}

@@ -8,10 +8,13 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  limit,
+  startAfter,
 } from 'firebase/firestore';
 
 // Actions
 const LOAD = 'words/LOAD';
+const RELOAD = 'words/RELOAD';
 const CREATE = 'words/CREATE';
 const REMOVE = 'words/REMOVE';
 const TOGGLE = 'words/TOGGLE';
@@ -22,8 +25,12 @@ const initialState = {
 };
 
 // Action Creators
-export function loadWords(wordsList) {
-  return { type: LOAD, wordsList };
+export function loadWords(wordsList, length, lastVisible) {
+  return { type: LOAD, wordsList, length, lastVisible };
+}
+
+export function loadNextWords(wordsList, lastVisible) {
+  return { type: RELOAD, wordsList, lastVisible };
 }
 
 export function createWord(wordData) {
@@ -46,14 +53,38 @@ export function updateWord(wordIdx, wordData) {
 export const loadWordsFB = () => {
   return async function (dispatch) {
     const wordsRef = collection(db, 'words');
-    const q = query(wordsRef, orderBy('date', 'desc'));
-    const words = await getDocs(q);
+    const first = query(wordsRef, orderBy('date', 'desc'), limit(15));
+    const words = await getDocs(first);
+    const lastVisible = words.docs[words.docs.length - 1];
+
+    let length = 0;
+    (await getDocs(wordsRef)).forEach((_, i) => length++);
 
     let wordsList = [];
     words.forEach((doc) => {
       wordsList.push({ id: doc.id, ...doc.data() });
     });
-    dispatch(loadWords(wordsList));
+    dispatch(loadWords(wordsList, length, lastVisible));
+  };
+};
+
+export const loadNextWordsFB = (last) => {
+  return async function (dispatch, getState) {
+    const wordsRef = collection(db, 'words');
+    const next = query(
+      wordsRef,
+      orderBy('date', 'desc'),
+      startAfter(last),
+      limit(15)
+    );
+    const words = await getDocs(next);
+    const lastVisible = words.docs[words.docs.length - 1];
+
+    const wordsList = getState().words.list;
+    words.forEach((doc) => {
+      wordsList.push({ id: doc.id, ...doc.data() });
+    });
+    dispatch(loadNextWords(wordsList, lastVisible));
   };
 };
 
@@ -107,13 +138,20 @@ export const updateWordFB = (wordId, word) => {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case 'words/LOAD': {
-      return { list: action.wordsList };
+      return {
+        list: action.wordsList,
+        length: action.length,
+        last: action.lastVisible,
+      };
+    }
+    case 'words/RELOAD': {
+      return { ...state, list: action.wordsList, last: action.lastVisible };
     }
     case 'words/REMOVE': {
       const newList = state.list.filter(
         (_, i) => i !== parseInt(action.wordIdx)
       );
-      return { list: newList };
+      return { list: newList, length: state.length - 1 };
     }
     case 'words/TOGGLE': {
       const newList = state.list.map((v, i) => {
@@ -123,7 +161,7 @@ export default function reducer(state = initialState, action = {}) {
           return v;
         }
       });
-      return { list: newList };
+      return { ...state, list: newList };
     }
     case 'words/UPDATE': {
       const newList = state.list.map((v, i) => {
@@ -133,7 +171,7 @@ export default function reducer(state = initialState, action = {}) {
           return v;
         }
       });
-      return { list: newList };
+      return { ...state, list: newList };
     }
     default:
       return state;

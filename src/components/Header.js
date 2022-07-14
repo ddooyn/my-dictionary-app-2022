@@ -13,6 +13,9 @@ const Header = () => {
   };
   useEffect(() => {
     window.addEventListener('scroll', updateScroll);
+    return () => {
+      window.removeEventListener('scroll', updateScroll);
+    };
   }, []);
 
   return (
