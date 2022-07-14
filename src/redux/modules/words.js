@@ -128,7 +128,7 @@ export default function reducer(state = initialState, action = {}) {
     case 'words/UPDATE': {
       const newList = state.list.map((v, i) => {
         if (i === parseInt(action.wordIdx)) {
-          return { ...action.word };
+          return { id: v.id, ...action.word };
         } else {
           return v;
         }
