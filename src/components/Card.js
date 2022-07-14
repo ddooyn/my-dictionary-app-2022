@@ -3,17 +3,18 @@ import styled from 'styled-components';
 import { BsCheckCircle, BsCheckCircleFill } from 'react-icons/bs';
 import { FaRegEdit } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
-import { removeWordFB } from '../redux/modules/words';
+import { removeWordFB, toggleCheckFB } from '../redux/modules/words';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 
 const Card = ({ word, pron, mean, ex, trans, check, id }) => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const toggleCheck = (id, check) => {
+    dispatch(toggleCheckFB(id, check));
+  };
+
   const removeWord = (id) => {
     dispatch(removeWordFB(id));
     alert('단어가 삭제되었습니다.');
-    navigate('/');
   };
 
   return (
@@ -25,7 +26,9 @@ const Card = ({ word, pron, mean, ex, trans, check, id }) => {
       <p className="trans">{trans}</p>
       <Icons>
         <li>
-          <button>{check ? <BsCheckCircleFill /> : <BsCheckCircle />}</button>
+          <button onClick={() => toggleCheck(id, check)}>
+            {check ? <BsCheckCircleFill /> : <BsCheckCircle />}
+          </button>
         </li>
         <li>
           <button>

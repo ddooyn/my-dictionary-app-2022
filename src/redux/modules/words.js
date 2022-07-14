@@ -7,12 +7,14 @@ import {
   orderBy,
   doc,
   deleteDoc,
+  updateDoc,
 } from 'firebase/firestore';
 
 // Actions
 const LOAD = 'words/LOAD';
 const CREATE = 'words/CREATE';
 const REMOVE = 'words/REMOVE';
+const TOGGLE = 'words/TOGGLE';
 
 const initialState = {
   list: [],
@@ -27,8 +29,12 @@ export function createWord(wordData) {
   return { type: CREATE, wordData };
 }
 
-export function removeWord(wordId) {
-  return { type: REMOVE, wordId };
+export function removeWord(wordIdx) {
+  return { type: REMOVE, wordIdx };
+}
+
+export function toggleCheck(wordIdx, check) {
+  return { type: TOGGLE, wordIdx, check };
 }
 
 // Middlewares
@@ -42,8 +48,6 @@ export const loadWordsFB = () => {
     words.forEach((doc) => {
       wordsList.push({ id: doc.id, ...doc.data() });
     });
-    console.log(wordsList);
-
     dispatch(loadWords(wordsList));
   };
 };
@@ -52,24 +56,37 @@ export const createWordFB = (word) => {
   return async function (dispatch) {
     const docRef = await addDoc(collection(db, 'words'), word);
     const wordData = { id: docRef.id, ...word };
-
     dispatch(createWord(wordData));
   };
 };
 
-export const removeWordFB = (wordIdx) => {
+export const removeWordFB = (wordId) => {
   return async function (dispatch, getState) {
-    if (!wordIdx) {
+    if (!wordId) {
       alert('삭제할 단어가 없습니다!');
       return;
     }
-    const docRef = doc(db, 'words', wordIdx);
+    const docRef = doc(db, 'words', wordId);
     await deleteDoc(docRef);
 
     const wordsList = getState().words.list;
-    const wordId = wordsList.findIndex((v) => v.id === wordIdx);
+    const wordIdx = wordsList.findIndex((v) => v.id === wordId);
+    dispatch(removeWord(wordIdx));
+  };
+};
 
-    dispatch(removeWord(wordId));
+export const toggleCheckFB = (wordId, check) => {
+  return async function (dispatch, getState) {
+    if (!wordId) {
+      alert('단어가 없습니다!');
+      return;
+    }
+    const docRef = doc(db, 'words', wordId);
+    await updateDoc(docRef, { checked: !check });
+
+    const wordsList = getState().words.list;
+    const wordIdx = wordsList.findIndex((v) => v.id === wordId);
+    dispatch(toggleCheck(wordIdx, check));
   };
 };
 
@@ -81,8 +98,18 @@ export default function reducer(state = initialState, action = {}) {
     }
     case 'words/REMOVE': {
       const newList = state.list.filter(
-        (_, i) => i !== parseInt(action.wordId)
+        (_, i) => i !== parseInt(action.wordIdx)
       );
+      return { list: newList };
+    }
+    case 'words/TOGGLE': {
+      const newList = state.list.map((v, i) => {
+        if (i === parseInt(action.wordIdx)) {
+          return { ...v, checked: !action.check };
+        } else {
+          return v;
+        }
+      });
       return { list: newList };
     }
     default:
