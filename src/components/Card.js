@@ -5,8 +5,10 @@ import { FaRegEdit } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { removeWordFB, toggleCheckFB } from '../redux/modules/words';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-const Card = ({ word, pron, mean, ex, trans, check, id }) => {
+const Card = ({ word, pron, mean, ex, trans, check, id, idx }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleCheck = (id, check) => {
     dispatch(toggleCheckFB(id, check));
@@ -31,7 +33,7 @@ const Card = ({ word, pron, mean, ex, trans, check, id }) => {
           </button>
         </li>
         <li>
-          <button>
+          <button onClick={() => navigate(`/word/edit/${idx}`)}>
             <FaRegEdit />
           </button>
         </li>

@@ -16,10 +16,11 @@ const CardList = () => {
     <>
       <ListTitle>{`📚 ${words.length}개의 단어가 있습니다.`}</ListTitle>
       <Cards>
-        {words.map((v) => (
+        {words.map((v, i) => (
           <Card
             key={v.id}
             id={v.id}
+            idx={i}
             word={v.word}
             pron={v.pronunciation}
             mean={v.meaning}

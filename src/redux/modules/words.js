@@ -15,6 +15,7 @@ const LOAD = 'words/LOAD';
 const CREATE = 'words/CREATE';
 const REMOVE = 'words/REMOVE';
 const TOGGLE = 'words/TOGGLE';
+const UPDATE = 'words/UPDATE';
 
 const initialState = {
   list: [],
@@ -35,6 +36,10 @@ export function removeWord(wordIdx) {
 
 export function toggleCheck(wordIdx, check) {
   return { type: TOGGLE, wordIdx, check };
+}
+
+export function updateWord(wordIdx, wordData) {
+  return { type: UPDATE, wordIdx, wordData };
 }
 
 // Middlewares
@@ -90,6 +95,14 @@ export const toggleCheckFB = (wordId, check) => {
   };
 };
 
+export const updateWordFB = (wordId, word) => {
+  return async function (dispatch) {
+    const docRef = doc(db, 'words', wordId);
+    await updateDoc(docRef, { ...word });
+    dispatch(updateWord(wordId, word));
+  };
+};
+
 // Reducer
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
@@ -106,6 +119,16 @@ export default function reducer(state = initialState, action = {}) {
       const newList = state.list.map((v, i) => {
         if (i === parseInt(action.wordIdx)) {
           return { ...v, checked: !action.check };
+        } else {
+          return v;
+        }
+      });
+      return { list: newList };
+    }
+    case 'words/UPDATE': {
+      const newList = state.list.map((v, i) => {
+        if (i === parseInt(action.wordIdx)) {
+          return { ...action.word };
         } else {
           return v;
         }

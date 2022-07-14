@@ -1,13 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import Button from '../components/Button';
-import { useDispatch } from 'react-redux';
-import { createWordFB } from '../redux/modules/words';
-import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { createWordFB, updateWordFB } from '../redux/modules/words';
+import { useNavigate, useParams } from 'react-router-dom';
 
-const Add = () => {
+const Word = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const wordIdx = useParams().id;
+  const wordInfo = useSelector((state) => state.words.list)[wordIdx];
 
   const wordRef = useRef();
   const pronRef = useRef();
@@ -15,29 +17,42 @@ const Add = () => {
   const exRef = useRef();
   const transRef = useRef();
 
+  useEffect(() => {
+    if (wordIdx) {
+      wordRef.current.value = wordInfo.word;
+      pronRef.current.value = wordInfo.pronunciation;
+      meanRef.current.value = wordInfo.meaning;
+      exRef.current.value = wordInfo.example;
+      transRef.current.value = wordInfo.translation;
+    }
+  }, []);
+
   const onClickSubmit = (e) => {
     e.preventDefault();
+    let newWord = {
+      word: wordRef.current.value,
+      pronunciation: pronRef.current.value,
+      meaning: meanRef.current.value,
+      example: exRef.current.value,
+      translation: transRef.current.value,
+      checked: false,
+      date: Date.now(),
+    };
     if (
-      wordRef.current.value &&
-      pronRef.current.value &&
-      meanRef.current.value &&
-      exRef.current.value &&
-      transRef.current.value
+      !(
+        wordRef.current.value &&
+        pronRef.current.value &&
+        meanRef.current.value &&
+        exRef.current.value &&
+        transRef.current.value
+      )
     ) {
-      dispatch(
-        createWordFB({
-          word: wordRef.current.value,
-          pronunciation: pronRef.current.value,
-          meaning: meanRef.current.value,
-          example: exRef.current.value,
-          translation: transRef.current.value,
-          checked: false,
-          date: Date.now(),
-        })
-      );
-      navigate('/');
-    } else {
       return alert('빈 항목을 모두 입력해주세요.');
+    } else {
+      wordIdx
+        ? dispatch(updateWordFB(wordInfo.id, newWord))
+        : dispatch(createWordFB(newWord));
+      navigate('/');
     }
   };
 
@@ -75,13 +90,17 @@ const Add = () => {
             ref={transRef}
           />
         </InputWrapper>
-        <Button type="button" content="단어 추가하기" event={onClickSubmit} />
+        <Button
+          type="button"
+          content={wordIdx ? '단어 수정하기' : '단어 추가하기'}
+          event={onClickSubmit}
+        />
       </Form>
     </>
   );
 };
 
-export default Add;
+export default Word;
 
 const Form = styled.div`
   width: 350px;
